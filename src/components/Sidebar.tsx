@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 export const Sidebar = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [entities, setEntities] = useState(["User", "Product", "Order"]);
 
   return (
     <aside className="w-64 bg-neutral-950 p-1 text-gray-300 border-r border-t border-fuchsia-500 rounded-r-[3px] flex flex-col justify-between h-screen">
       <div>
-        {/* Topo */}
         <div className="flex items-center justify-between h-9 border-b border-b-gray-700 mb-2 p-2">
           <img
             src="/crudius2.svg"
@@ -20,7 +20,6 @@ export const Sidebar = () => {
           </div>
         </div>
 
-        {/* Campo de nova entidade */}
         <div className="flex items-center gap-2 px-2 pb-2 border-b border-gray-700 mb-2">
           <input
             type="text"
@@ -28,14 +27,13 @@ export const Sidebar = () => {
             className="w-full px-2 py-1 bg-neutral-900 text-sm text-white border border-fuchsia-500 rounded outline-none focus:ring-1 focus:ring-fuchsia-400"
           />
           <button
-            className="px-2 py-1 bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded text-sm"
+            className="px-2 py-1 cursor-pointer bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded text-sm"
             title="Adicionar entidade"
           >
             <i className="fa fa-plus" />
           </button>
         </div>
 
-        {/* Lista de entidades */}
         <div className="px-2 flex flex-col gap-1">
           {entities.map((entity, index) => (
             <div
@@ -52,9 +50,8 @@ export const Sidebar = () => {
         </div>
       </div>
 
-      {/* Rodapé com configurações */}
       <div className="border-t border-gray-700 px-2 py-3">
-        <button className="flex items-center gap-2 text-sm text-gray-400 hover:text-white">
+        <button className="flex items-center gap-2 text-sm cursor-pointer text-gray-400 hover:text-white">
           <i className="fa fa-cog" />
           Configurações
         </button>
