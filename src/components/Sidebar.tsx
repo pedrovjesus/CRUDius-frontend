@@ -1,61 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Logo from "../images/crudius2.svg";
+import IconMenu from "../images/menu.svg";
+import IconAdd from '../images/add.svg';
+import IconArrpw from '../images/arrow.svg';
+import IconSettings from '../images/settings.svg';
+import postcssPluginWarning from "tailwindcss";
 
 export const Sidebar = () => {
+  // ns-resize
+  function expand (e) {
+    
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [entities, setEntities] = useState(["User", "Product", "Order"]);
 
   return (
-    <aside className="w-64 bg-neutral-950 p-1 text-gray-300 border-r border-t border-fuchsia-500 rounded-r-[3px] flex flex-col justify-between h-screen">
-      <div>
-        <div className="flex items-center justify-between h-9 border-b border-b-gray-700 mb-2 p-2">
-          <img
-            src="/crudius2.svg"
-            alt="Logo"
-            className="w-5 h-5 object-contain"
-          />
-          <h2 className="text-sm font-bold">Crudius Studio</h2>
-          <div className="text-xs">
-            <i className="fa fa-undo cursor-pointer mr-3" title="Undo"></i>
-            <i className="fa fa-redo cursor-pointer" title="Redo"></i>
-          </div>
-        </div>
+    <aside className="menu-list-entity" onMouseMove={(e) => {expand(e)}}>
+      <div className="header">
+        <img className="logo" src={Logo} alt="logo of CRUDius" />
 
-        <div className="flex items-center gap-2 px-2 pb-2 border-b border-gray-700 mb-2">
-          <input
-            type="text"
-            placeholder="Nova entidade"
-            className="w-full px-2 py-1 bg-neutral-900 text-sm text-white border border-fuchsia-500 rounded outline-none focus:ring-1 focus:ring-fuchsia-400"
-          />
-          <button
-            className="px-2 py-1 cursor-pointer bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded text-sm"
-            title="Adicionar entidade"
-          >
-            <i className="fa fa-plus" />
-          </button>
-        </div>
+        <h1>CRUDius Studio</h1>
 
-        <div className="px-2 flex flex-col gap-1">
-          {entities.map((entity, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center text-sm px-2 py-1 bg-neutral-900 rounded hover:bg-neutral-800 transition-colors"
-            >
-              <span>{entity}</span>
-              <i
-                className="fa fa-ellipsis-v text-gray-500 text-xs cursor-pointer"
-                title="Opções"
-              ></i>
-            </div>
-          ))}
+        <div className="section-undo-redo">
+          <img className="undo disabled" src={IconArrpw} alt="undo" />
+          <img className="redo" src={IconArrpw} alt="redo" />
         </div>
       </div>
 
-      <div className="border-t border-gray-700 px-2 py-3">
-        <button className="flex items-center gap-2 text-sm cursor-pointer text-gray-400 hover:text-white">
-          <i className="fa fa-cog" />
-          Configurações
-        </button>
+      <div className="section-new-entity">
+        <input className="input-add-entity" type="text" placeholder="add  entity" />
+        <button className="button-add"><img src={IconAdd} alt="button add new entity"/></button>
       </div>
+
+      <div className="list-entity">
+        <div className="entity">
+          <span>Cats</span>
+          <img className="menu-entity" src={IconMenu} alt="menu of entity" />
+        </div>
+
+        <div className="entity">
+          <span>Cats</span>
+          <img className="menu-entity" src={IconMenu} alt="menu of entity" />
+        </div>
+
+        <div className="entity">
+          <span>Cats</span>
+          <img className="menu-entity" src={IconMenu} alt="menu of entity" />
+        </div>
+      </div>
+
+      <button className="section-settings">
+        <img src={IconSettings} alt="settings of CRUDius" />
+        <span>Settings</span>
+      </button>
     </aside>
   );
 };
