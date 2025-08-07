@@ -7,6 +7,7 @@
     --color-base: #CA74FF;
 
     font-size: 16px;
+    overflow: hidden;
 }
 
 .main {
@@ -22,11 +23,11 @@
 .menu-list-entity {
     background-color: #0F0F0F;
     height: 100%;
-    width: 300px;
+    width: 400px;
     border: 1px solid #CA74FF;
     border-radius: 10px;
     border-left: 0;
-
+    z-index: 999;
 }
 
 .menu-list-entity .header {
@@ -188,7 +189,7 @@ input::placeholder {
 .group-canva-terminal {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     height: 100%;
     width: 90%;
@@ -212,6 +213,7 @@ input::placeholder {
     color: #ffffff;
     padding: 1rem;
     padding-top: 8px;
+    z-index: 999;
 }
 
 .terminal:hover {
@@ -254,6 +256,7 @@ input::placeholder {
     border: 1px solid #CA74FF;
     border-right: 0;
     border-radius: 8px;
+    z-index: 999;
 }
 
 .entity-settings h2 {
@@ -335,4 +338,52 @@ input::placeholder {
 
 h1, h2 {
     color: #ffffff;
+}
+
+
+.main-canva {
+    width: 100%;
+}
+
+canvas {
+    width: 109%;
+    height: 100%;
+}
+
+.table {
+    height: 10rem;
+    width: 10rem;
+    position: absolute;
+    background-color: #1d1d1d;
+    color: #ffffff;
+}
+
+.table .header {
+    background-color: #0F0F0F;
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.create {
+    border: 1px solid greenyellow;
+}
+
+.delete {
+    border: 1px solid red;
+}
+
+.update {
+    border: 1px solid yellow;
+}
+
+.create .header {
+    border: 1px solid greenyellow;
+}
+
+.delete .header {
+    border: 1px solid red;
+}
+
+.update .header {
+    border: 1px solid yellow;
 }

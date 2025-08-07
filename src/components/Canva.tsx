@@ -1,97 +1,156 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export const Canva = () => {
-  const canvasRef = useRef(null)
+  const canvasRef = useRef(null);
+  const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 
-  const [zoom, setZoom] = useState(0.6)
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const isDragging = useRef(false)
-  const lastMousePos = useRef({ x: 0, y: 0 })
+  const isDraggingCanvas = useRef(false);
+  const isDraggingInput = useRef(false);
+  const draggingInputId = useRef(null);
+  const lastMouse = useRef({ x: 0, y: 0 });
 
+  const [tables, setTables] = useState([
+    { id: 1, x: 300, y: -100, name: "Nome", type: 'create', values: [
+      {name: 'pessoa', type: 'string', data: 'teste'},
+      {name: 'pessoa1', type: 'string', data: 'tststs'},
+    ] },
+    { id: 2, x: -200, y: -200, name: "Nome", type: 'update', values: [
+      {name: 'pessoa2', type: 'string', data: 'teste'},
+      {name: 'pessoa3', type: 'string', data: 'tststs'},
+    ] },
+        { id: 3, x: 0, y: 0, name: "Nome", type: 'delete', values: [
+      {name: 'pessoa2', type: 'string', data: 'teste'},
+      {name: 'pessoa3', type: 'string', data: 'tststs'},
+    ] },
+  ]);
+
+  // Desenha o grid
   useEffect(() => {
-    const canvas = canvasRef.current
-    
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const canvas = canvasRef.current;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }, [offset, zoom]);
 
-    const draw = (ctx, pY, pX) => {
-      ctx = canvas.getContext("2d")
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-  
-      ctx.save();
-      ctx.translate(offset.x, offset.y)
-      ctx.scale(zoom, zoom)
-  
-      ctx.fillStyle = "#fff"
-      ctx.font = "24px Arial"
-      ctx.fillText("Minha Tabela", 0, 30)
-  
-      const headers = ["Nome", "Idade"]
-      const rows = [
-        ["Alice", "25"],
-        ["Bob", "30"],
-        ["Charlie", "28"],
-      ]
-  
-      const cellWidth = 150
-      const cellHeight = 40
-      const startX = pX
-      const startY = pY
-  
-      ctx.font = "bold 16px Arial"
-      ctx.fillStyle = "#333"
-      headers.forEach((header, i) => {
-        ctx.strokeRect(startX + i * cellWidth, startY, cellWidth, cellHeight)
-        ctx.fillText(header, startX + i * cellWidth + 10, startY + 25)
+  // Zoom com scroll do mouse
+  const handleWheel = (e) => {
+    const delta = -e.deltaY;
+    const zoomIntensity = 0.001;
+
+    const newZoom = zoom * (1 + delta * zoomIntensity);
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    // Calcula o ponto no mundo antes do zoom
+    const worldX = (mouseX - offset.x) / zoom;
+    const worldY = (mouseY - offset.y) / zoom;
+
+    // Atualiza zoom e offset para manter o ponto fixo
+    if (newZoom >+ 0.316478381828866 && newZoom <+ 2.773078757450189) {
+      setZoom(newZoom);
+      setOffset({
+        x: mouseX - worldX * newZoom,
+        y: mouseY - worldY * newZoom,
       });
-  
-      ctx.font = "14px Arial"
-      rows.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
-          const x = startX + colIndex * cellWidth
-          const y = startY + (rowIndex + 1) * cellHeight
-          ctx.strokeRect(x, y, cellWidth, cellHeight)
-          ctx.fillText(cell, x + 10, y + 25)
-        });
-      });
-  
-      ctx.restore()
-    };
-
-    draw('ooo', 98, 1)
-    draw('sss', 2, 38)
-  }, [zoom, offset])
-
+    }
+  };
 
   const handleMouseDown = (e) => {
-    isDragging.current = true
-    lastMousePos.current = { x: e.clientX, y: e.clientY }
+    lastMouse.current = { x: e.clientX, y: e.clientY };
+
+    // Detecta clique na tabela
+    for (let table of tables) {
+      const getTable = document.getElementById(table.id)
+      const screenX = offset.x + table.x * zoom;
+      const screenY = offset.y + table.y * zoom;
+      const width = getTable.offsetWidth * zoom;
+      const height = getTable.offsetHeight * zoom;
+
+      if (
+        e.clientX >= screenX &&
+        e.clientX <= screenX + width &&
+        e.clientY >= screenY &&
+        e.clientY <= screenY + height
+      ) {
+        isDraggingInput.current = true;
+        draggingInputId.current = table.id;
+        return;
+      }
+    }
+
+    isDraggingCanvas.current = true;
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging.current) return
-    const dx = e.clientX - lastMousePos.current.x
-    const dy = e.clientY - lastMousePos.current.y
-    setOffset((prev) => ({
-      x: prev.x + dx,
-      y: prev.y + dy,
-    }));
-    lastMousePos.current = { x: e.clientX, y: e.clientY }
+    const dx = e.clientX - lastMouse.current.x;
+    const dy = e.clientY - lastMouse.current.y;
+
+    if (isDraggingCanvas.current) {
+      setOffset((prev) => ({ x: prev.x + dx, y: prev.y + dy }));
+    }
+
+    if (isDraggingInput.current && draggingInputId.current != null) {
+      setTables((prevInputs) =>
+        prevInputs.map((table) =>
+          table.id === draggingInputId.current
+            ? {
+                ...table,
+                x: table.x + dx / zoom,
+                y: table.y + dy / zoom,
+              }
+            : table
+        )
+      );
+    }
+
+    lastMouse.current = { x: e.clientX, y: e.clientY };
   };
 
   const handleMouseUp = () => {
-    isDragging.current = false
+    isDraggingCanvas.current = false;
+    isDraggingInput.current = false;
+    draggingInputId.current = null;
   };
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="canva"
+    <div
+      className="main-canva"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      style={{ display: "block", cursor: "grab" }}
-    />
+      onWheel={handleWheel}
+    >
+      <canvas
+        ref={canvasRef}
+      />
+
+      {tables.map((table) => {
+        const style = {
+          left: offset.x + table.x * zoom,
+          top: offset.y + table.y * zoom,
+          transform: `scale(${zoom})`,
+          zIndex: 1,
+        };
+
+        const list = table.values.map((dataTable) => {
+          return (
+              <div key={dataTable.name} className="value">
+                <span>{dataTable.data}</span>
+              </div>
+          );
+        })
+        return (
+          <div className={'table ' + table.type} id={table.id} key={table.id} style={style}>
+            <div className="header">
+              <span>{table.name}</span>
+            </div>
+            <div className="content">
+              {list}
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
-};
+}
