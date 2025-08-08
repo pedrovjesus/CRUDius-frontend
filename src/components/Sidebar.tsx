@@ -4,18 +4,32 @@ import IconMenu from "../images/menu.svg";
 import IconAdd from '../images/add.svg';
 import IconArrpw from '../images/arrow.svg';
 import IconSettings from '../images/settings.svg';
-import postcssPluginWarning from "tailwindcss";
 
-export const Sidebar = () => {
-  // ns-resize
-  function expand (e) {
-    
+export const Sidebar = (nodes) => {
+  const tables = nodes.tables
+  const setTables = nodes.setTables
+
+  const [inputTable, setInputTable] = useState('')
+
+  function handleChange (e) {
+    setInputTable(e.value.trim())
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [entities, setEntities] = useState(["User", "Product", "Order"]);
+
+  function addTable () {
+    if (inputTable !== '') {
+      setTables([
+        ...tables,
+        { id: tables.length, focus: true, x: 0, y: 0, name: inputTable, type: 'delete', values: [
+          {name: 'Default', type: 'string', data: 'init'},
+        ] },
+      ])
+
+      setInputTable('')
+    }
+  }
 
   return (
-    <aside className="menu-list-entity" onMouseMove={(e) => {expand(e)}}>
+    <aside className="menu-list-entity">
       <div className="header">
         <img className="logo" src={Logo} alt="logo of CRUDius" />
 
@@ -28,25 +42,43 @@ export const Sidebar = () => {
       </div>
 
       <div className="section-new-entity">
-        <input className="input-add-entity" type="text" placeholder="add  entity" />
-        <button className="button-add"><img src={IconAdd} alt="button add new entity"/></button>
+        <input className="input-add-entity" value={inputTable} onChange={(e) => {handleChange(e.target)}} type="text" placeholder="add  entity" />
+        <button className="button-add" onClick={() => {addTable()}}><img src={IconAdd} alt="button add new entity"/></button>
       </div>
 
       <div className="list-entity">
-        <div className="entity">
-          <span>Cats</span>
-          <img className="menu-entity" src={IconMenu} alt="menu of entity" />
-        </div>
+        {tables.map((table) => {
+          function getClass () {
+            if (table.focus == 0) {
+              return 'entity'
+            } else {
+              return 'entity focus'
+            }
+          }
 
-        <div className="entity">
-          <span>Cats</span>
-          <img className="menu-entity" src={IconMenu} alt="menu of entity" />
-        </div>
+          function changeFocus (id) {
+            setTables((prevTable) =>
+              prevTable.map((table) =>
 
-        <div className="entity">
-          <span>Cats</span>
-          <img className="menu-entity" src={IconMenu} alt="menu of entity" />
-        </div>
+                table.id === id
+                  ? {
+                      ...table,
+                      focus: true,
+                    }
+                  : {
+                      ...table,
+                      focus: false,
+                    }
+              )
+            );
+          }
+          return (
+            <div className={getClass()} key={table.id} onClick={() => {changeFocus(table.id)}}>
+              <span>{table.name}</span>
+              <img className="menu-entity" src={IconMenu} alt="menu of entity" />
+            </div>
+          )
+        })}
       </div>
 
       <button className="section-settings">

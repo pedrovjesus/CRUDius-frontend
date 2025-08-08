@@ -8,6 +8,7 @@
 
     font-size: 16px;
     overflow: hidden;
+    color: #ffffff;
 }
 
 .main {
@@ -146,14 +147,14 @@ input::placeholder {
     padding: 0.2rem 0.7rem;
     color: #ffffff;
     font-size: 1.1rem;
-    opacity: 90%;
     transition: 0.2s;
+    opacity: 80%;
 
 }
 
-.entity:hover, .entity .focus{
+.entity:hover, .entity.focus{
     opacity: 100%;
-    background-color: #252525;
+    background-color: #222222;
     cursor: pointer;
 }
 
@@ -252,7 +253,7 @@ input::placeholder {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 10px;
+    padding: 0.6rem 1rem;
     border: 1px solid #CA74FF;
     border-right: 0;
     border-radius: 8px;
@@ -268,6 +269,7 @@ input::placeholder {
     width: 100%;
     display: flex;
     flex-direction: row;
+    margin-left: 0.1rem;
 }
 
 .label-inputs {
@@ -276,15 +278,30 @@ input::placeholder {
 }
 
 .label-inputs input {
-    margin: 10px 0;
-    border: 1px solid #CA74FF;
+    margin: 1rem 0;
+    background-color: #0e0e0e;
+    height: 2rem;
+    padding-left: 0.7rem;
+    font-weight: 300;
     outline: 0;
+    opacity: 80%;
+    transition: 0.3s;
 } 
+
+.entity-name input:focus, .entity-values input:focus,
+.entity-name input:hover, .entity-values input:hover {
+    background-color: #313131;
+    opacity: 100%;
+}
 
 .entity-type .section-input input {
     width: 1px;
     height: 1px;
     opacity: 0;
+}
+
+.entity-type .inputs {
+    margin-top: 1rem !important;
 }
 
 .entity-type .section-input label {
@@ -295,9 +312,27 @@ input::placeholder {
     transition: 0.2s;
     color: #ffffff;
     font-weight: 600;
+    transition: 0.3s;
+}
+
+.entity-type .section-input .create {
+    color: greenyellow;
+}
+
+.entity-type .section-input .update {
+    color: yellow;
+}
+
+.entity-type .section-input .delete {
+    color: red;
+}
+
+.entity-type .section-input .focus {
+    opacity: 100%;
 }
 
 .entity-type .inputs {
+    margin-top: 1rem;
     margin-top: 0.6rem;
     display: flex;
     justify-content: flex-start;
@@ -336,10 +371,6 @@ input::placeholder {
     opacity: 199%;
 }
 
-h1, h2 {
-    color: #ffffff;
-}
-
 
 .main-canva {
     width: 100%;
@@ -356,6 +387,12 @@ canvas {
     position: absolute;
     background-color: #1d1d1d;
     color: #ffffff;
+    z-index: 3;
+}
+
+.table ::selection {
+    background-color: #7147a100;
+    opacity: 0%;
 }
 
 .table .header {
@@ -364,26 +401,30 @@ canvas {
     margin-bottom: 0.3rem;
 }
 
+.focus.table {
+    z-index: 9;
+}
+
 .create {
-    border: 1px solid greenyellow;
+    border: 0.5px solid rgba(172, 255, 47, 0.68);
 }
 
 .delete {
-    border: 1px solid red;
+    border: 0.5px solid rgba(255, 0, 0, 0.68);
 }
 
 .update {
-    border: 1px solid yellow;
+    border: 0.5px solid rgba(255, 255, 0, 0.685) !important;
 }
 
-.create .header {
+.focus.create, .focus.create .header {
     border: 1px solid greenyellow;
 }
 
-.delete .header {
+.focus.delete, .focus.delete .header {
     border: 1px solid red;
 }
 
-.update .header {
+.focus.update, .focus.update .header {
     border: 1px solid yellow;
 }

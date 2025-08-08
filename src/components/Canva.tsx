@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 
-export const Canva = () => {
+export const Canva = (node) => {
+  const tables = node.tables
+  const setTables = node.setTables
   const canvasRef = useRef(null);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
@@ -9,21 +11,6 @@ export const Canva = () => {
   const isDraggingInput = useRef(false);
   const draggingInputId = useRef(null);
   const lastMouse = useRef({ x: 0, y: 0 });
-
-  const [tables, setTables] = useState([
-    { id: 1, x: 300, y: -100, name: "Nome", type: 'create', values: [
-      {name: 'pessoa', type: 'string', data: 'teste'},
-      {name: 'pessoa1', type: 'string', data: 'tststs'},
-    ] },
-    { id: 2, x: -200, y: -200, name: "Nome", type: 'update', values: [
-      {name: 'pessoa2', type: 'string', data: 'teste'},
-      {name: 'pessoa3', type: 'string', data: 'tststs'},
-    ] },
-        { id: 3, x: 0, y: 0, name: "Nome", type: 'delete', values: [
-      {name: 'pessoa2', type: 'string', data: 'teste'},
-      {name: 'pessoa3', type: 'string', data: 'tststs'},
-    ] },
-  ]);
 
   // Desenha o grid
   useEffect(() => {
@@ -58,6 +45,7 @@ export const Canva = () => {
   const handleMouseDown = (e) => {
     lastMouse.current = { x: e.clientX, y: e.clientY };
 
+
     // Detecta clique na tabela
     for (let table of tables) {
       const getTable = document.getElementById(table.id)
@@ -65,6 +53,17 @@ export const Canva = () => {
       const screenY = offset.y + table.y * zoom;
       const width = getTable.offsetWidth * zoom;
       const height = getTable.offsetHeight * zoom;
+
+        setTables((prevTable) =>
+        prevTable.map((table) =>
+          table.focus === true
+            ? {
+                ...table,
+                focus: false,
+              }
+            : table
+        )
+      );
 
       if (
         e.clientX >= screenX &&
@@ -74,10 +73,13 @@ export const Canva = () => {
       ) {
         isDraggingInput.current = true;
         draggingInputId.current = table.id;
+        getTable?.classList.add('focus')
+        changeFocus(table.id)
         return;
       }
     }
-
+    
+    
     isDraggingCanvas.current = true;
   };
 
@@ -90,8 +92,8 @@ export const Canva = () => {
     }
 
     if (isDraggingInput.current && draggingInputId.current != null) {
-      setTables((prevInputs) =>
-        prevInputs.map((table) =>
+      setTables((prevTable) =>
+        prevTable.map((table) =>
           table.id === draggingInputId.current
             ? {
                 ...table,
@@ -106,10 +108,43 @@ export const Canva = () => {
     lastMouse.current = { x: e.clientX, y: e.clientY };
   };
 
+
+  function changeFocus (id) {
+      setTables((prevTable) =>
+        prevTable.map((table) =>
+
+          table.id === id
+            ? {
+                ...table,
+                focus: true,
+              }
+            : {
+                ...table,
+                focus: false,
+              }
+        )
+      );
+    }
+
   const handleMouseUp = () => {
+    setTables((prevTable) =>
+      prevTable.map((table) =>
+
+        table.id === draggingInputId.current
+          ? {
+              ...table,
+              focus: true,
+            }
+          : {
+              ...table,
+            }
+      )
+    );
+
     isDraggingCanvas.current = false;
     isDraggingInput.current = false;
     draggingInputId.current = null;
+
   };
 
   return (
@@ -130,7 +165,6 @@ export const Canva = () => {
           left: offset.x + table.x * zoom,
           top: offset.y + table.y * zoom,
           transform: `scale(${zoom})`,
-          zIndex: 1,
         };
 
         const list = table.values.map((dataTable) => {
@@ -140,8 +174,16 @@ export const Canva = () => {
               </div>
           );
         })
+        function getClass () {
+          if (table.focus == 1) {
+            return 'table focus ' + table.type
+          } else {
+            return 'table ' + table.type
+          }
+        }
+
         return (
-          <div className={'table ' + table.type} id={table.id} key={table.id} style={style}>
+          <div className={getClass()} onClick={() => {changeFocus(table.id)}} id={table.id} key={table.id} style={style}>
             <div className="header">
               <span>{table.name}</span>
             </div>
