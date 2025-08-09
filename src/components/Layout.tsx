@@ -1,27 +1,37 @@
+import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Terminal } from "./Terminal";
+import { EntitySettings } from "./EntitySettings";
+import { Canva } from "./Canva";
 
-interface ILayoutProps {
-  title: string;
-  children: React.ReactNode;
-}
-export const Layout: React.FC<ILayoutProps> = ({ title, children }) => {
+export const Layout = () => {
+  const [nodes, setNodes] = useState([
+    { id: '1Nome',focus: false, x: 300, y: -100, name: "Pessoa", type: 'create', values: [
+      {name: 'pessoa', type: 'string', data: 'teste'},
+      {name: 'pessoa1', type: 'string', data: 'tststs'},
+    ] },
+    { id: '2Nome', focus: false, x: -200, y: -200, name: "Dog", type: 'update', values: [
+      {name: 'pessoa2', type: 'string', data: 'teste'},
+      {name: 'pessoa3', type: 'string', data: 'tststs'},
+    ] },
+    { id: '3Nome', focus: true, x: 0, y: 0, name: "Worlf", type: 'delete', values: [
+      {name: 'pessoa2', type: 'string', data: 'teste'},
+      {name: 'pessoa3', type: 'string', data: 'tststs'},
+    ] },
+  ]);
+
+  
+
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-800 text-white">
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+    <div className="main">
+      <Sidebar tables={nodes} setTables={setNodes}/>
 
-        <div className="flex flex-col pb-0 flex-1 p-2 justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-6">{title}</h1>
-            <div className="p-6">{children}</div>
-          </div>
-
-          <div className="h-50">
-            <Terminal />
-            </div>
-        </div>
+      <div className="group-canva-terminal">
+        <Canva tables={nodes} setTables={setNodes}/>
+        <Terminal/>
       </div>
+
+      <EntitySettings tables={nodes} setTables={setNodes} />
     </div>
   );
 };
