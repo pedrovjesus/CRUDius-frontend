@@ -5,9 +5,8 @@
 :root {
     --color-black: #0F0F0F;
     --color-base: #CA74FF;
-
-    font-size: 16px;
     overflow: hidden;
+    font-size: 16px;
     color: #ffffff;
 }
 
@@ -25,10 +24,12 @@
     background-color: #0F0F0F;
     height: 100%;
     width: 400px;
+    max-width: 429rem;
     border: 1px solid #CA74FF;
     border-radius: 10px;
     border-left: 0;
     z-index: 999;
+    overflow: hidden;
 }
 
 .menu-list-entity .header {
@@ -141,6 +142,7 @@ input::placeholder {
 
 .entity {
     background-color: #1d1d1d;
+    overflow: hidden;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -149,6 +151,7 @@ input::placeholder {
     font-size: 1.1rem;
     transition: 0.2s;
     opacity: 80%;
+    width: 100%;
 
 }
 
@@ -249,6 +252,7 @@ input::placeholder {
 
 
 .entity-settings {
+    width: 25rem;
     color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -258,6 +262,13 @@ input::placeholder {
     border-right: 0;
     border-radius: 8px;
     z-index: 999;
+    overflow-y: A;
+    overflow-x: hidden;
+}
+
+.section-entity-settings {
+    width: 95%;
+    margin: 0;
 }
 
 .entity-settings h2 {
@@ -275,6 +286,28 @@ input::placeholder {
 .label-inputs {
     margin: 10px 0;
     font-weight: 500;
+}
+
+.entity-values .add-values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.button-value {
+    transition: 0.3s;
+    cursor: pointer;
+    opacity: 90%;
+}
+
+.button-value img {
+    width: 1.2rem;
+
+}
+
+.button-value:hover {
+    opacity: 199%;
 }
 
 .label-inputs input {
@@ -315,19 +348,19 @@ input::placeholder {
     transition: 0.3s;
 }
 
-.entity-type .section-input .create {
+.entity-type label.create {
     color: greenyellow;
 }
 
-.entity-type .section-input .update {
-    color: yellow;
-}
-
-.entity-type .section-input .delete {
+.entity-type label.delete {
     color: red;
 }
 
-.entity-type .section-input .focus {
+.entity-type label.update {
+    color: yellow;
+}
+
+.entity-type .label.focus {
     opacity: 100%;
 }
 
@@ -343,19 +376,6 @@ input::placeholder {
 .entity-type label:hover {
     opacity: 199%;
     cursor: pointer;
-}
-
-.button-value {
-    background-color: #7f47a1;
-    padding: 5px 20px;
-    border-radius: 5px;
-    transition: 0.3s;
-    cursor: pointer;
-    opacity: 90%;
-}
-
-.button-value:hover {
-    opacity: 199%;
 }
 
 .button-export {
@@ -405,15 +425,15 @@ canvas {
     z-index: 9;
 }
 
-.create {
+.table.create {
     border: 0.5px solid rgba(172, 255, 47, 0.68);
 }
 
-.delete {
+.table.delete {
     border: 0.5px solid rgba(255, 0, 0, 0.68);
 }
 
-.update {
+.table.update {
     border: 0.5px solid rgba(255, 255, 0, 0.685) !important;
 }
 
