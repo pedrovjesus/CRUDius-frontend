@@ -1,11 +1,11 @@
-import { useState } from "react";
+interface SidebarProps {
+  entities: string[];
+  setEntities: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-export const Sidebar = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [entities, setEntities] = useState(["User", "Product", "Order"]);
-
+export const Sidebar: React.FC<SidebarProps> = ({ entities, setEntities }) => {
   return (
-    <aside className="w-64 bg-neutral-950 p-1 text-gray-300 border-r border-t border-fuchsia-500 rounded-r-[3px] flex flex-col justify-between h-screen">
+    <aside className="w-64 bg-neutral-950 p-1 text-gray-300 border-r border-fuchsia-500 rounded-r-[3px] flex flex-col justify-between h-screen">
       <div>
         <div className="flex items-center justify-between h-9 border-b border-b-gray-700 mb-2 p-2">
           <img

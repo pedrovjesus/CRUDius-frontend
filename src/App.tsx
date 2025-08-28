@@ -1,5 +1,4 @@
 import "./App.css";
-import { Canva } from "./components/Canva";
 import { Layout } from "./components/Layout";
 
 function App() {

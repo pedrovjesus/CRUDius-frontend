@@ -22,23 +22,27 @@ type Table = {
 
 export const Layout: React.FC<ILayoutProps> = ({ title, children }) => {
   // Estado das tabelas
-  const [tables, setTables] = useState<Table[]>([
-    {
-      id: "table1",
-      name: "Mesa 1",
-      type: "type-a",
-      x: 0,
-      y: 0,
-      focus: false,
-      values: [{ name: "value1", data: "10" }],
-    },
-    // você pode adicionar mais tabelas aqui
+  const [entities, setEntities] = useState<string[]>([
+    "User",
+    "Product",
+    "Order",
   ]);
+  const [tables, setTables] = useState<Table[]>(
+    entities.map((entity, i) => ({
+      id: `table-${i}`,
+      name: entity,
+      type: "type-a",
+      x: 100 * i,
+      y: 50,
+      focus: false,
+      values: [{ name: entity, data: "string" }, { name: entity, data: "number" }],
+    }))
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-neutral-800 text-white">
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar entities={entities} setEntities={setEntities} />
 
         <div className="flex flex-col pb-0 flex-1 p-2 justify-between">
           <div>
@@ -46,7 +50,7 @@ export const Layout: React.FC<ILayoutProps> = ({ title, children }) => {
             <div className="p-6">{children}</div>
           </div>
 
-          <div className="max-w-3 max-h-3">
+          <div className="max-w-3 max-h-3 border-amber-300">
             <Canva tables={tables} setTables={setTables} />
           </div>
 

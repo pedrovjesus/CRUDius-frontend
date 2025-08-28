@@ -27,7 +27,9 @@ export const Canva: React.FC<CanvaProps> = ({ tables, setTables }) => {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
   });
-
+  const canvas = canvasRef.current;
+  const canvasWidth = canvas?.width || window.innerWidth;
+  const canvasHeight = canvas?.height || window.innerHeight;
   const isDraggingCanvas = useRef<boolean>(false);
   const isDraggingInput = useRef<boolean>(false);
   const draggingInputId = useRef<string | null>(null);
@@ -97,7 +99,17 @@ export const Canva: React.FC<CanvaProps> = ({ tables, setTables }) => {
     const dy = e.clientY - lastMouse.current.y;
 
     if (isDraggingCanvas.current) {
-      setOffset((prev) => ({ x: prev.x + dx, y: prev.y + dy }));
+      setOffset((prev) => {
+        const newX = Math.max(
+          -canvasWidth / 2,
+          Math.min(prev.x + dx, canvasWidth / 2)
+        );
+        const newY = Math.max(
+          -canvasHeight / 2,
+          Math.min(prev.y + dy, canvasHeight / 2)
+        );
+        return { x: newX, y: newY };
+      });
     }
 
     if (isDraggingInput.current && draggingInputId.current) {
@@ -137,9 +149,6 @@ export const Canva: React.FC<CanvaProps> = ({ tables, setTables }) => {
 
   return (
     <div
-      className={`main-canva ${
-        isDraggingCanvas.current ? "cursor-grabbing" : "cursor-grab"
-      }`}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
@@ -162,23 +171,26 @@ export const Canva: React.FC<CanvaProps> = ({ tables, setTables }) => {
             id={table.id}
             key={table.id}
             style={style}
-            className={`absolute cursor-pointer rounded-lg shadow-2xl transition-transform duration-150 
-              ${table.focus ? "ring-4 ring-blue-500 scale-105" : "ring-0"} 
-              ${
-                table.type === "type-a" ? "bg-green-600" : "bg-purple-600"
-              } w-64`}
+            className={`absolute cursor-grab text-sm rounded border transition-transform duration-150
+    ${table.focus ? "border-blue-400 scale-105" : "border-gray-700"} 
+    bg-gray-800 w-36`}
           >
-            <div className="bg-gray-900 px-4 py-2 border-b border-gray-700 rounded-t-lg">
-              <span className="font-bold text-white text-lg">{table.name}</span>
+            {/* Header minimalista */}
+            <div className="px-2 py-1 border-b border-gray-700">
+              <span className="font-medium text-white text-sm">
+                {table.name}
+              </span>
             </div>
-            <div className="p-4 flex flex-col gap-2">
+
+            {/* Conteúdo compacto */}
+            <div className="p-1 flex flex-col gap-1">
               {table.values.map((val) => (
                 <div
                   key={val.name}
-                  className="bg-gray-800 rounded-md px-3 py-2 flex justify-between items-center shadow-inner"
+                  className="flex justify-between items-center text-xs text-white px-1 py-1"
                 >
-                  <span className="text-white font-medium">{val.name}</span>
-                  <span className="text-white font-semibold">{val.data}</span>
+                  <span>{val.name}</span>
+                  <span>{val.data}</span>
                 </div>
               ))}
             </div>
